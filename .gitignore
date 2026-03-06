@@ -1,0 +1,13 @@
+vendor/
+node_modules/
+
+.php-cs-fixer.cache
+.phpunit.cache
+mysql_data/
+migrations/*.csv
+
+.env
+.nvim.lua
+.prettierrc.extension.yml
+.idea
+.phpactor.json
