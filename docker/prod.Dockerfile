@@ -22,7 +22,7 @@ XDEBUG_MODE=off composer install
 SH
 
 # Fixen ide küldjük a kéréseket, így nem lesz CORS gond
-ENV VITE_API_URL=http://localhost:8000/api/v1
+ENV VITE_API_URL=http://localhost:8300/api/v1
 
 WORKDIR /tmp/client
 RUN <<SH

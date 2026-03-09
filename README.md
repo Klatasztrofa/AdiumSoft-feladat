@@ -38,7 +38,7 @@ parancs lefut,
 docker compose up prod db
 ```
 
-az elkészült program elérhető a `http://localhost:8000` címen, és megfelelően
+az elkészült program elérhető a `http://localhost:8300` címen, és megfelelően
 működik. Csak az `api/` és `client/` mappák tartalmát, a `db-suggestions.md`
 fájlt, illetve szükség esetén a `docker-compose.yaml` fájl tartalmát módosítsd!
 
@@ -99,7 +99,7 @@ $ curl localhost:5173
 
 Ha ezen a ponton nem találod a fentebb említett üzeneteket, az ellenőrző
 parancsokra nem ezeket a válaszokat kapod, vagy más hibát tapasztalsz, azt
-jelezd felénk!
+jelezd felénk! [hiring@adiumsoft.hu](mailto:hiring@adiumsoft.hu)
 
 A mintaadatokat egy MySQL adatbázisban tároljuk, amely a host gépről a `8081`
 porton érhető el. A használatához szükséges felhasználónév `root`, a jelszó
