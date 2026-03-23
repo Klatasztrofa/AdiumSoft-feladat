@@ -1,0 +1,92 @@
+services:
+  api-dev:
+    hostname: api-dev
+    container_name: takehome-api-dev
+    build:
+      dockerfile: api-dev.Dockerfile
+      context: ./docker
+    environment:
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
+    volumes:
+      - ./api:/var/www/html
+    extra_hosts:
+      # XDebug csatlakozás miatt kell. Windows alatt, WSL-ből indítva nem
+      # fogsz tudni rácsatlakozni Windows oldalról. Ha így akarod használni,
+      # ezt a sort módosítani kell.
+      - host.docker.internal:host-gateway
+    networks:
+      ads_takehome:
+    ports:
+      - 8080:80
+    depends_on:
+      db:
+        condition: service_healthy
+
+  client-dev:
+    hostname: client-dev
+    container_name: takehome-client-dev
+    build:
+      dockerfile: client-dev.Dockerfile
+      context: ./docker
+    environment:
+      # Itt a host gép címére hivatkozunk, mert a böngészőt (jó eséllyel) azon
+      # futtatjuk.
+      VITE_API_URL: http://localhost:8080
+    volumes:
+      - ./client:/usr/src/client
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      ads_takehome:
+    ports:
+      - 5173:5173
+
+  prod:
+    hostname: prod
+    container_name: takehome-prod
+    build:
+      dockerfile: docker/prod.Dockerfile
+      context: .
+    environment:
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      ads_takehome:
+    ports:
+      - 8300:8000
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+
+  db:
+    hostname: db
+    container_name: takehome-db
+    image: mysql:8.0.36
+    command: |
+      mysqld 
+      --character_set_server=utf8mb4
+      --collation_server=utf8mb4_hungarian_ci
+      --local-infile=1
+    environment:
+      TZ: Europe/Budapest
+      LANG: C.UTF-8
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ${MYSQL_DATA_DIR}:/var/lib/mysql
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      ads_takehome:
+    ports:
+      - 8081:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 5s
+      timeout: 30s
+      retries: 10
+      start_period: 0s
+
+  # TODO: dist
+
+networks:
+  ads_takehome:
